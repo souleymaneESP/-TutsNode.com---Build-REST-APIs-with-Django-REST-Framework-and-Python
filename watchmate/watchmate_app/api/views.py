@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 class StreamPlatformListAV(APIView):
     def get(self,request):
         streamPlatforms = StreamPlatform.objects.all()
-        serializer= StreamPlatformSerializer(streamPlatforms,many=True)
+        serializer= StreamPlatformSerializer(streamPlatforms,many=True,context={'request': request})
         return Response(serializer.data)
         
     def post(self,request):
