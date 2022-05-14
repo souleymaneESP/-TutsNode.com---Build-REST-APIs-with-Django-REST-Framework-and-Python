@@ -8,7 +8,6 @@ from watchmate_app.models import *
 
 
 class WatchListSerializer(serializers.ModelSerializer):
-    len_name=serializers.SerializerMethodField()
     
     class Meta:
         model=WatchList
@@ -26,14 +25,11 @@ class WatchListSerializer(serializers.ModelSerializer):
         else:
             return value
 
-    def get_len_name(self,object):
-        length=len(object.name)
-        return length
-
-
+    
 
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
+    watch_list= WatchListSerializer(many=True,read_only=True)
     class Meta:
         model=StreamPlatform
         fields="__all__"
