@@ -8,26 +8,37 @@ from rest_framework.views import APIView
 
 
 
-class ReviewsDetail(mixins.RetrieveModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+
+
+class ReviewsList(generics.ListCreateAPIView):
     queryset=Reviews.objects.all()
     serializer_class=ReviewsSerializer
-    
-    def get(self,request,*args, **kwargs):
-        return self.retrieve(request,*args, **kwargs)
 
-
-
-
-
-
-class ReviewsList(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+class ReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=Reviews.objects.all()
     serializer_class=ReviewsSerializer
+
+
+# class ReviewsDetail(mixins.RetrieveModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+#     queryset=Reviews.objects.all()
+#     serializer_class=ReviewsSerializer
     
-    def get(self,request,*args, **kwargs):
-        return self.list(request,*args, **kwargs)
-    def post(self,request,*args, **kwargs):
-        return self.create(request,*args, **kwargs)
+#     def get(self,request,*args, **kwargs):
+#         return self.retrieve(request,*args, **kwargs)
+
+
+
+
+
+
+# class ReviewsList(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+#     queryset=Reviews.objects.all()
+#     serializer_class=ReviewsSerializer
+    
+#     def get(self,request,*args, **kwargs):
+#         return self.list(request,*args, **kwargs)
+#     def post(self,request,*args, **kwargs):
+#         return self.create(request,*args, **kwargs)
 
 
 
