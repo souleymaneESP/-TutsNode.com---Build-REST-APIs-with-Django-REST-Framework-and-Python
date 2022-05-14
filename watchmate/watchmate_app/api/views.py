@@ -1,7 +1,9 @@
+from xml.dom import ValidationErr
 from watchmate_app.api.serializers import StreamPlatformSerializer
 from watchmate_app.models import *
 from watchmate_app.api.serializers import *
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view
 from rest_framework import status,mixins,generics,viewsets
 from rest_framework.views import APIView
@@ -10,11 +12,17 @@ from django.shortcuts import get_object_or_404
 
 class ReviewsCreate(generics.CreateAPIView):
     serializer_class=ReviewsSerializer
-
+    def get_queryset(self):
+        return Reviews.objects.all()
+    
     def perform_create(self,serializer):
-        pk=self.kwargs['pk']
+        pk=self.kwargs['pk'] 
         watchlist=WatchList.objects.get(pk=pk)
-        serializer.save(watchlist=wa)
+        review_user=self.request.user
+        review_queryset=Reviews.objects.filter(watchlist=watchlist,review_user=review_user)
+        if review_queryset.exists():
+            raise ValidationError("You already posted a review")
+        serializer.save(watchlist=watchlist,review_user=review_user)
 
 
 
