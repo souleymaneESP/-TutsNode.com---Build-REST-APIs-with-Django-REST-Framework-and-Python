@@ -8,11 +8,23 @@ from rest_framework.views import APIView
 
 
 
+class ReviewsCreate(generics.CreateAPIView):
+    serializer_class=ReviewsSerializer
+
+    def perform_create(self,serializer):
+        pk=self.kwargs['pk']
+        watchlist=WatchList.objects.get(pk=pk)
+        serializer.save(watchlist=watchlist)
+
 
 
 class ReviewsList(generics.ListCreateAPIView):
-    queryset=Reviews.objects.all()
     serializer_class=ReviewsSerializer
+
+    def get_queryset(self):
+        pk=self.kwargs['pk']
+        return Reviews.objects.filter(watch_list=pk)
+    
 
 class ReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=Reviews.objects.all()
@@ -64,7 +76,7 @@ class StreamPlatformDetailAV(APIView):
             streamPlatform = StreamPlatform.objects.get(pk=pk)
         except:
             return Response({'Error':'StreamPlatform not found'},status=status.HTTP_404_NOT_FOUND)
-        serializer= StreamPlatformSerializer(streamPlatform)
+        serializer= StreamPlatformSerializer(streamPlatform,context={'request': request})
         return Response(serializer.data)
 
 
