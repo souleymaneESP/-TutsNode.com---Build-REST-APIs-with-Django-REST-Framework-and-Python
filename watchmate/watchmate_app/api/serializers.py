@@ -8,8 +8,9 @@ from watchmate_app.models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
+    len_name=serializers.SerializerMethodField()
     
-     class Meta:
+    class Meta:
         model=Movie
         fields="__all__"
         # exclude=['active']
@@ -25,7 +26,9 @@ class MovieSerializer(serializers.ModelSerializer):
         else:
             return value
 
-
+    def get_len_name(self,object):
+        length=len(object.name)
+        return length
 
 
 
