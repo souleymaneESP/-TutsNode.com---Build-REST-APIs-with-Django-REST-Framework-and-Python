@@ -3,9 +3,9 @@ from watchmate_app.models import *
 from watchmate_app.api.serializers import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status,mixins,generics
+from rest_framework import status,mixins,generics,viewsets
 from rest_framework.views import APIView
-
+from django.shortcuts import get_object_or_404
 
 
 class ReviewsCreate(generics.CreateAPIView):
@@ -14,7 +14,7 @@ class ReviewsCreate(generics.CreateAPIView):
     def perform_create(self,serializer):
         pk=self.kwargs['pk']
         watchlist=WatchList.objects.get(pk=pk)
-        serializer.save(watchlist=watchlist)
+        serializer.save(watchlist=wa)
 
 
 
@@ -52,6 +52,19 @@ class ReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
 #     def post(self,request,*args, **kwargs):
 #         return self.create(request,*args, **kwargs)
 
+
+
+class StreamPlatformVS(viewsets.ViewSet):
+    def list(self, request):
+        queryset = StreamPlatform.objects.all()
+        serializer = StreamPlatformSerializer(queryset, many=True,context={'request':request})
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = StreamPlatform.objects.all()
+        stream_platform = get_object_or_404(queryset, pk=pk)
+        serializer = StreamPlatformSerializer(stream_platform,context={'request': request})
+        return Response(serializer.data)
 
 
 class StreamPlatformListAV(APIView):
