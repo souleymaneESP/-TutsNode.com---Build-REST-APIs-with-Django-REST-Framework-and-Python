@@ -20,10 +20,13 @@ class ReviewsCreate(generics.CreateAPIView):
         pk=self.kwargs['pk'] 
         watchlist=WatchList.objects.get(pk=pk)
         review_user=self.request.user
-        review_queryset=Reviews.objects.filter(watchlist=watchlist,review_user=review_user)
+        review_queryset=Reviews.objects.filter(watch_list=watchlist,review_user=review_user)
         if review_queryset.exists():
             raise ValidationError("You already posted a review")
-        serializer.save(watchlist=watchlist,review_user=review_user)
+        watchlist.reviews_number+=1
+        watchlist.avg_rating= (watchlist.avg_rating*(watchlist.reviews_number-1)+serializer.validated_data['rating'])/watchlist.reviews_number
+        watchlist.save()
+        serializer.save(watch_list=watchlist,review_user=review_user)
 
 
 

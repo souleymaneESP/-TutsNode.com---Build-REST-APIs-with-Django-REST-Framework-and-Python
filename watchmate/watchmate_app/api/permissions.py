@@ -5,7 +5,16 @@ class AdminOrReadOnly(permissions.IsAdminUser):
         if request.method in permissions.SAFE_METHODS:
             return True
         else:
-            return bool(request.user and request.user.is_staff())
+            try:
+                user=request.user()
+                if request.user.is_staff():
+                    return True
+            except:
+                return False
+            # if request.is_authenticated():
+            #     if request.user.is_staff():
+            #         return True
+            # return False
 
 class ReviewUserOrReadOnly(permissions.BasePermission):
     def has_object_permission(self,request,view,obj):
