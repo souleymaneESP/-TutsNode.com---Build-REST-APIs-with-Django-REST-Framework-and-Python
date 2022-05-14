@@ -3,6 +3,7 @@ from watchmate_app.api.serializers import StreamPlatformSerializer
 from watchmate_app.models import *
 from watchmate_app.api.serializers import *
 from rest_framework.response import Response
+from rest_framework.permissions import *
 from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view
 from rest_framework import status,mixins,generics,viewsets
@@ -28,7 +29,7 @@ class ReviewsCreate(generics.CreateAPIView):
 
 class ReviewsList(generics.ListCreateAPIView):
     serializer_class=ReviewsSerializer
-
+    permission_classes=[IsAuthenticated]
     def get_queryset(self):
         pk=self.kwargs['pk']
         return Reviews.objects.filter(watch_list=pk)
