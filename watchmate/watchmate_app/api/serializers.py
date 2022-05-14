@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from watchmate_app.models import Movie
+from watchmate_app.models import *
 
 
 
@@ -7,11 +7,11 @@ from watchmate_app.models import Movie
 
 
 
-class MovieSerializer(serializers.ModelSerializer):
+class WatchListSerializer(serializers.ModelSerializer):
     len_name=serializers.SerializerMethodField()
     
     class Meta:
-        model=Movie
+        model=WatchList
         fields="__all__"
         # exclude=['active']
 
@@ -33,8 +33,10 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 
-
-
+class StreamPlatformSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=StreamPlatform
+        fields="__all__"
 
 
 # def name_length(value):
