@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status,mixins,generics,viewsets
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-
+from watchmate_app.api.permissions import *
 
 class ReviewsCreate(generics.CreateAPIView):
     serializer_class=ReviewsSerializer
@@ -29,7 +29,7 @@ class ReviewsCreate(generics.CreateAPIView):
 
 class ReviewsList(generics.ListCreateAPIView):
     serializer_class=ReviewsSerializer
-    permission_classes=[IsAuthenticated]
+    permission_classes=[AdminOrReadOnly]
     def get_queryset(self):
         pk=self.kwargs['pk']
         return Reviews.objects.filter(watch_list=pk)
@@ -38,6 +38,8 @@ class ReviewsList(generics.ListCreateAPIView):
 class ReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=Reviews.objects.all()
     serializer_class=ReviewsSerializer
+    permission_classes=[ReviewUserOrReadOnly]
+
 
 
 # class ReviewsDetail(mixins.RetrieveModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
