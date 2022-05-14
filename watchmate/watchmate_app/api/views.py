@@ -3,8 +3,31 @@ from watchmate_app.models import *
 from watchmate_app.api.serializers import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
+from rest_framework import status,mixins,generics
 from rest_framework.views import APIView
+
+
+
+class ReviewsDetail(mixins.RetrieveModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    queryset=Reviews.objects.all()
+    serializer_class=ReviewsSerializer
+    
+    def get(self,request,*args, **kwargs):
+        return self.retrieve(request,*args, **kwargs)
+
+
+
+
+
+
+class ReviewsList(mixins.ListModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
+    queryset=Reviews.objects.all()
+    serializer_class=ReviewsSerializer
+    
+    def get(self,request,*args, **kwargs):
+        return self.list(request,*args, **kwargs)
+    def post(self,request,*args, **kwargs):
+        return self.create(request,*args, **kwargs)
 
 
 
