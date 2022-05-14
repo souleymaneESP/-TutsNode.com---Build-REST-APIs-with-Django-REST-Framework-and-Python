@@ -4,3 +4,4 @@ from watchmate_app.models import *
 
 admin.site.register(WatchList)
 admin.site.register(StreamPlatform)
+admin.site.register(Reviews)

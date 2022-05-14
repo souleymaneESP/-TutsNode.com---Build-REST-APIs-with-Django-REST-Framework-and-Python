@@ -2,28 +2,32 @@ from rest_framework import serializers
 from watchmate_app.models import *
 
 
-
+class ReviewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Reviews
+        fields="__all__"
 
 
 
 
 class WatchListSerializer(serializers.ModelSerializer):
+    reviews= ReviewsSerializer(many=True, read_only=True)
     
     class Meta:
         model=WatchList
         fields="__all__"
         # exclude=['active']
 
-    def validate(self,data):
-        if data['title']==data['description']:
-            raise serializers.ValidationError("Name and Title should not be similar")
-        return data
+    # def validate(self,data):
+    #     if data['title']==data['description']:
+    #         raise serializers.ValidationError("Name and Title should not be similar")
+    #     return data
 
-    def validate_name(self,value):
-        if len(value)<2:
-            raise serializers.ValidationError("Name is too short")
-        else:
-            return value
+    # def validate_name(self,value):
+    #     if len(value)<2:
+    #         raise serializers.ValidationError("Name is too short")
+    #     else:
+    #         return value
 
     
 
