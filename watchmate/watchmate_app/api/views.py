@@ -32,7 +32,7 @@ class ReviewsCreate(generics.CreateAPIView):
 
 class ReviewsList(generics.ListCreateAPIView):
     serializer_class=ReviewsSerializer
-    permission_classes=[AdminOrReadOnly]
+    permission_classes=[IsAuthenticated]
     def get_queryset(self):
         pk=self.kwargs['pk']
         return Reviews.objects.filter(watch_list=pk)
