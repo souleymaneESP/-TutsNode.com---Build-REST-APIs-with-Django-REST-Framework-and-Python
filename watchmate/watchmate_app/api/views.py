@@ -12,6 +12,16 @@ from django.shortcuts import get_object_or_404
 from watchmate_app.api.permissions import *
 from rest_framework.throttling import *
 from watchmate_app.api.throttling import *
+from django_filters.rest_framework import DjangoFilterBackend
+
+class UserReview(generics.ListAPIView):
+    serializer_class=ReviewsSerializer
+    # throttle_classes = [ReviewListThrottle]
+    def get_queryset(self):
+        pk=self.kwargs['username']
+        return Reviews.objects.filter(review_user__username=pk)
+
+
 
 class ReviewsCreate(generics.CreateAPIView):
     serializer_class=ReviewsSerializer
@@ -36,7 +46,13 @@ class ReviewsCreate(generics.CreateAPIView):
 
 class ReviewsList(generics.ListCreateAPIView):
     serializer_class=ReviewsSerializer
-    throttle_classes = [ReviewListThrottle]
+    # throttle_classes = [ReviewListThrottle]
+    filter_backends = [DjangoFilterBackend]
+    filterset__fields=['review_user__username']
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['rating']
+    # filter_backends = [filters.OrderingFilter]
+    # ordering_fields = ['rating']
     def get_queryset(self):
         pk=self.kwargs['pk']
         return Reviews.objects.filter(watch_list=pk)
@@ -146,6 +162,7 @@ class StreamPlatformDetailAV(APIView):
 
 class WatchListAV(APIView):
     permission_classes=[AdminOrReadOnly]
+    
     def get(self,request):
         watchLists = WatchList.objects.all()
         serializer= WatchListSerializer(watchLists,many=True)
