@@ -13,6 +13,7 @@ from watchmate_app.api.permissions import *
 
 class ReviewsCreate(generics.CreateAPIView):
     serializer_class=ReviewsSerializer
+    permission_classes=[ReviewUserOrReadOnly]
     def get_queryset(self):
         return Reviews.objects.all()
     
@@ -32,7 +33,7 @@ class ReviewsCreate(generics.CreateAPIView):
 
 class ReviewsList(generics.ListCreateAPIView):
     serializer_class=ReviewsSerializer
-    permission_classes=[IsAuthenticated]
+    
     def get_queryset(self):
         pk=self.kwargs['pk']
         return Reviews.objects.filter(watch_list=pk)
@@ -69,6 +70,7 @@ class ReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
 class StreamPlatformVS(viewsets.ModelViewSet):
     queryset = StreamPlatform.objects.all()
     serializer_class=StreamPlatformSerializer
+    permission_classes=[AdminOrReadOnly]
 
 
 
@@ -95,6 +97,7 @@ class StreamPlatformVS(viewsets.ModelViewSet):
 
 
 class StreamPlatformListAV(APIView):
+    permission_classes=[AdminOrReadOnly]
     def get(self,request):
         streamPlatforms = StreamPlatform.objects.all()
         serializer= StreamPlatformSerializer(streamPlatforms,many=True,context={'request': request})
@@ -110,6 +113,7 @@ class StreamPlatformListAV(APIView):
 
 
 class StreamPlatformDetailAV(APIView):
+    permission_classes=[AdminOrReadOnly]
 
     def get(self,request,pk):
         try:
@@ -137,6 +141,7 @@ class StreamPlatformDetailAV(APIView):
 
 
 class WatchListAV(APIView):
+    permission_classes=[AdminOrReadOnly]
     def get(self,request):
         watchLists = WatchList.objects.all()
         serializer= WatchListSerializer(watchLists,many=True)
@@ -152,7 +157,7 @@ class WatchListAV(APIView):
 
 
 class WatchListDetailAV(APIView):
-
+    permission_classes=[AdminOrReadOnly]
     def get(self,request,pk):
         try:
             watchList = WatchList.objects.get(pk=pk)
