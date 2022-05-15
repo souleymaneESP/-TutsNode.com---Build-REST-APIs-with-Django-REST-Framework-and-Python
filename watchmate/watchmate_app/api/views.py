@@ -10,10 +10,13 @@ from rest_framework import status,mixins,generics,viewsets
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from watchmate_app.api.permissions import *
+from rest_framework.throttling import *
+from watchmate_app.api.throttling import *
 
 class ReviewsCreate(generics.CreateAPIView):
     serializer_class=ReviewsSerializer
     permission_classes=[ReviewUserOrReadOnly]
+    throttle_classes = [ReviewCreateThrottle]
     def get_queryset(self):
         return Reviews.objects.all()
     
@@ -33,7 +36,7 @@ class ReviewsCreate(generics.CreateAPIView):
 
 class ReviewsList(generics.ListCreateAPIView):
     serializer_class=ReviewsSerializer
-    
+    throttle_classes = [ReviewListThrottle]
     def get_queryset(self):
         pk=self.kwargs['pk']
         return Reviews.objects.filter(watch_list=pk)
@@ -43,7 +46,8 @@ class ReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=Reviews.objects.all()
     serializer_class=ReviewsSerializer
     permission_classes=[ReviewUserOrReadOnly]
-
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope='review-detail'
 
 
 # class ReviewsDetail(mixins.RetrieveModelMixin,mixins.CreateModelMixin,generics.GenericAPIView):
